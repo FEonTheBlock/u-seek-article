@@ -1,21 +1,18 @@
 # CSS-in-JS 관련 논의 & 발표
 
-- [https://github.com/streamich/freestyler/blob/master/docs/en/generations.md](https://github.com/streamich/freestyler/blob/master/docs/en/generations.md)
-- [https://velog.io/@lucas/CSS-IN-JS는-어떻게-컴포넌트를-스타일링해줄-수-있는가](https://velog.io/@lucas/CSS-IN-JS%EB%8A%94-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%A5%BC-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A7%81%ED%95%B4%EC%A4%84-%EC%88%98-%EC%9E%88%EB%8A%94%EA%B0%80)
-- [https://medium.com/free-code-camp/the-tradeoffs-of-css-in-js-bee5cf926fdb](https://medium.com/free-code-camp/the-tradeoffs-of-css-in-js-bee5cf926fdb)
-- [https://so-so.dev/web/css-in-js-whats-the-defference/](https://so-so.dev/web/css-in-js-whats-the-defference/)
-- [https://github.com/andreipfeiffer/css-in-js/blob/main/README.md#1-using-style-tags](https://github.com/andreipfeiffer/css-in-js/blob/main/README.md#1-using-style-tags)
-- [https://junghan92.medium.com/번역-우리가-css-in-js와-헤어지는-이유-a2e726d6ace6](https://junghan92.medium.com/%EB%B2%88%EC%97%AD-%EC%9A%B0%EB%A6%AC%EA%B0%80-css-in-js%EC%99%80-%ED%97%A4%EC%96%B4%EC%A7%80%EB%8A%94-%EC%9D%B4%EC%9C%A0-a2e726d6ace6)
-
 ### CSS in JS
 
+- [https://github.com/streamich/freestyler/blob/master/docs/en/generations.md](https://github.com/streamich/freestyler/blob/master/docs/en/generations.md)
 - 장점
     - 컴포넌트 기반 개발
     - 선택자의 충돌을 생각할 필요가 없다.
     - 자동 벤더 프리픽스
     - JS와 CSS 사이의 상수와 함수를 공유할 수 있다.
-    - 트리 셰이킹
+    - 트리 셰이킹 (Dead Code Elimination)
     - 유닛 테스트
+    
+    → 개발 친화적 ( 높은 DX )
+    
 - 1세대
     - [css-modules](https://github.com/css-modules/css-modules)
     - JS로 작성하지 않는다. ← CSS 전처리기 사용
@@ -59,7 +56,10 @@
 
 ## The tradeoffs of CSS-in-JS
 
+- [https://medium.com/free-code-camp/the-tradeoffs-of-css-in-js-bee5cf926fdb](https://medium.com/free-code-camp/the-tradeoffs-of-css-in-js-bee5cf926fdb)
 - Social Impact
+    - 자바스크립트를 모르고 웹 개발을 하는 사람도 있다.
+    - CSS-in-JS는 개발자들의 워크플로우에 큰 영향을 끼쳤다.
 - Runtime Cost
     - CSS가 브라우저에서 JS의 런타임에 생성된다. (런타임 오버헤드 발생)
     - 라이브러리 마다 런타임 오버헤드를 처리하고 발생하는 부분이 다르며 전략에 대한 4가지 방법이 있다.
@@ -73,18 +73,22 @@
         - 런타임의 JS 값(상태)에 접근할 수 없다.
         - 렌더링 차단 요소 (CSS)
     4. Build-time extraction with Critical CSS
+        - 빌드 타임에 중요한 CSS를 먼저 생성
 - 접근성
     - 정적 사이트가 크리티컬 CSS의 추출 없이 구현될 때, HTML은 로드되어 평가되기 전까지 웹 페이지를 그릴 수 없다.
     - 임베드 방식의 문제점
-- SSR 코스트
+- Critical CSS 코스트
+    - CSS-in-JS에서 Critical CSS를 추출하기 위해선 SSR이 필요하다.
 - 렌더링 블랙박스
+    - 사용하는 CSS-in-JS 마다 CSS를 렌더링 하는 프로세스가 다르다.
 - 러닝 커브
 - 상호 운용성
 - 보안 위험
 - 읽을 수 없는 클래스
 
-## Runtime (overhead) CSS-in-JS
+## Runtime CSS-in-JS
 
+- [https://so-so.dev/web/css-in-js-whats-the-defference/](https://so-so.dev/web/css-in-js-whats-the-defference/)
 - styled-components
     
     ```tsx
@@ -104,13 +108,14 @@
     > 
 - Emotion
     - styled-components와 비슷
+    - [https://junghan92.medium.com/번역-우리가-css-in-js와-헤어지는-이유-a2e726d6ace6](https://junghan92.medium.com/%EB%B2%88%EC%97%AD-%EC%9A%B0%EB%A6%AC%EA%B0%80-css-in-js%EC%99%80-%ED%97%A4%EC%96%B4%EC%A7%80%EB%8A%94-%EC%9D%B4%EC%9C%A0-a2e726d6ace6)
 
-### zero-runtime css-in-js
+## zero-runtime css-in-js
 
 - linaria → 내부적으로 css variable을 사용해 동적으로 css 변경이 가능하다.
 - 추출된 Critical CSS는 주요 렌더링 경로에서 사용하므로 문서 상단에 주입하고, 나머지는 link 태그로 로드하여 렌더링을 막지 않고 비동기로 로드할 수 있다. → `link 태그 비동기 로드?`
 
-### near zero-runtime css-in-js
+## near zero-runtime css-in-js
 
 - stitches
     - cssom 수정 방식
@@ -129,20 +134,41 @@
 
 ## Atomic CSS
 
-### tailwindcss
+### Tailwindcss
 
+- [https://fe-developers.kakaoent.com/2022/220210-css-in-kakaowebtoon/](https://fe-developers.kakaoent.com/2022/220210-css-in-kakaowebtoon/)
 - 미리 정의된 className을 조합해 스타일링 하는 방식
+- rem이 기본단위 → 유틸리티 클래스 중에 하나를 골라야 한다.
+- 애니메이션, 트랜지션 사용에 제약
+- 자바스크립트 상태/값 공유 불가
+- purge 설정을 통해 사용하지 않는 스타일은 결과물에서 제외할 수 있지만, Critical CSS에 대해 판단을 할 수 없다. (?)
 
 ## Stitches
 
-- variants를 사용해 성능 상에 이점은 있지만 어느정도 고수준의 디자인 토큰인 varinats을 만들어내야 하는 코스트가 발생한다.
+- [https://stitches.dev/](https://stitches.dev/)
+- variants를 사용해 성능 상에 이점은 있지만 어느정도 고수준의 디자인 토큰인 variants을 만들어내야 하는 코스트가 발생한다.
 - css-in-js는 다른 라이브러리에 의존해 사용법이 언제든 달라질 수 있다.
 - 렌더링 블랙박스
+
+- 반복되는 스타일에 대해 atomic class로 변환해 같은 class를 사용할 수 있도록 최적화 해준다.
+    
+    → 같은 스타일이더라도 내부 순서가 변경되면 같은 class를 사용하지 않는다.
+    
 - —> 궁금한 점 렌더링이 발생할 때 마다 직렬화가 발생하는지?
+
+## Tailwind vs Css-in-JS
+
+- [https://sancho.dev/blog/tailwind-and-design-systems](https://sancho.dev/blog/tailwind-and-design-systems)
+- [https://fe-developers.kakaoent.com/2022/221013-tailwind-and-design-system/](https://fe-developers.kakaoent.com/2022/221013-tailwind-and-design-system/)
 
 ## Further
 
+- [https://github.com/andreipfeiffer/css-in-js/blob/main/README.md#1-using-style-tags](https://github.com/andreipfeiffer/css-in-js/blob/main/README.md#1-using-style-tags)
+- [https://velog.io/@bepyan/CSS-in-JS-라이브러리에-대한-고찰](https://velog.io/@bepyan/CSS-in-JS-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC%EC%97%90-%EB%8C%80%ED%95%9C-%EA%B3%A0%EC%B0%B0)
 - [https://blog.cometkim.kr/posts/css-optimization-in-jamstack/](https://blog.cometkim.kr/posts/css-optimization-in-jamstack/)
+- [https://pustelto.com/blog/css-vs-css-in-js-perf/](https://pustelto.com/blog/css-vs-css-in-js-perf/)
+- [https://ped.ro/writing/why-i-build-design-systems-with-stitches-and-radix](https://ped.ro/writing/why-i-build-design-systems-with-stitches-and-radix)
+- [https://fe-developers.kakaoent.com/2022/221013-tailwind-and-design-system/](https://fe-developers.kakaoent.com/2022/221013-tailwind-and-design-system/)
 - Remix vs Next.js
     - [https://blog.bitsrc.io/remix-vs-next-js-a-detailed-comparison-6ff557f7b41f](https://blog.bitsrc.io/remix-vs-next-js-a-detailed-comparison-6ff557f7b41f)
     

@@ -1062,3 +1062,9 @@ const Button = styled('button', {});
       </>
     );
     ```
+    
+    ## References
+    
+    - [https://github.com/andreipfeiffer/css-in-js/blob/main/README.md#2-style-tag-injected-styles](https://github.com/andreipfeiffer/css-in-js/blob/main/README.md#2-style-tag-injected-styles)
+    - [https://dev.to/nayaabkhan/vanilla-extract-stitches-a-comparison-58c2](https://dev.to/nayaabkhan/vanilla-extract-stitches-a-comparison-58c2)
+    - [https://css-tricks.com/a-thorough-analysis-of-css-in-js/](https://css-tricks.com/a-thorough-analysis-of-css-in-js/)
